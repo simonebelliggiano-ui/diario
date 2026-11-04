@@ -1,5 +1,5 @@
 // Conserva tutti i file dell'app per l'uso senza internet. Non tocca mai i dati delle voci.
-const VERSIONE = 'b26a8a0cf423';
+const VERSIONE = '02654f16571b';
 const FILE = [
   './',
   'index.html',

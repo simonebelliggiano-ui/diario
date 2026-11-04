@@ -190,3 +190,9 @@ input.field{outline:0;font-family:inherit;appearance:none;-webkit-appearance:non
 
 /* --- Categorie chiuse in Voce ------------------------------------------------------------- */
 .chip.on.fissa{padding-left:14px}
+
+/* --- Area di ora, batteria e Dynamic Island -------------------------------------------------
+   La grafica arriva fino al bordo dello schermo. iOS scrive ora e batteria sempre in bianco:
+   nel tema chiaro serve un fondo più scuro solo lì, che sfuma verso il basso. */
+.velo-stato{position:absolute;top:0;left:0;right:0;height:calc(var(--st) * 1.6);z-index:50;pointer-events:none}
+.t-chiaro .velo-stato{background:linear-gradient(180deg,rgba(84,80,168,.92) 0,rgba(84,80,168,.88) 40%,rgba(84,80,168,.62) 50%,rgba(84,80,168,.34) 62%,rgba(84,80,168,.14) 78%,rgba(84,80,168,0) 100%)}
