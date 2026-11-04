@@ -1,4 +1,5 @@
 // Elementi comuni dell'interfaccia: componenti, finestre, messaggi, gesti.
+import { velaFascia } from './aspetto.js';
 
 export const radice = () => document.getElementById('scr');
 export const riduciMovimento = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -263,11 +264,13 @@ export function chiudiMessaggio() {
 function velo(alTocco) {
   const v = h('div', { class: 'velo2', onclick: alTocco });
   radice().append(v);
+  velaFascia(true);
   requestAnimationFrame(() => requestAnimationFrame(() => v.classList.add('on')));
   return v;
 }
 
 function chiudiStrato(el, v) {
+  velaFascia(false);
   el.classList.remove('on');
   v.classList.remove('on');
   setTimeout(() => { el.remove(); v.remove(); }, 300);

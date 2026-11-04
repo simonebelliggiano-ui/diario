@@ -8,9 +8,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Diario">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#E7DEFA" id="colore-tema">
+<script>
+/* Colore della fascia dell'orario: iOS usa quello del fondo pagina. Va deciso prima del primo disegno. */
+(function(){var a;try{a=localStorage.getItem('diario-aspetto')}catch(e){}
+var d=a==='scuro'||(a!=='chiaro'&&matchMedia('(prefers-color-scheme: dark)').matches);
+document.documentElement.style.background=d?'#12111B':'#E7DEFA';document.documentElement.style.colorScheme=d?'dark':'light'})();
+</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icone/icona.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icone/icona-180.png">
@@ -30,7 +36,6 @@
     <section id="v2" class="vista" aria-label="Seduta"></section>
     <nav id="tabs" class="tabs" aria-label="Sezioni"></nav>
   </div>
-  <div class="velo-stato" aria-hidden="true"></div>
 </div>
 </body>
 </html>

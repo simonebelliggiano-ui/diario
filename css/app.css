@@ -14,8 +14,10 @@
   --t:max(var(--st),12px);--b:max(var(--sb),12px);
   --kb:0px;
 }
-html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:#F3F0FB;-webkit-text-size-adjust:100%}
-@media (prefers-color-scheme:dark){html,body{background:#12111B}}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+html{background:#E7DEFA;transition:background-color var(--t-fade) ease}
+body{background:transparent}
+@media (prefers-color-scheme:dark){html{background:#12111B}}
 
 /* --- Telaio ---------------------------------------------------------------- */
 .scr{position:fixed;inset:0;width:auto;height:auto;background:var(--top);-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;overflow:hidden}
@@ -95,11 +97,11 @@ html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;backgrou
 /* --- Pannello Nuova voce --------------------------------------------------------- */
 .velo{position:absolute;inset:0;z-index:5;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity var(--t-sheet) ease}
 .velo.on{opacity:1;pointer-events:auto}
-.sheet{top:max(var(--st),10px);z-index:6;transform:translateY(102%);transition:transform var(--t-sheet) var(--ease);display:block}
-.sheet.on{transform:none}
-.sheet.segue{transition:none}
+.sheet{top:var(--st);z-index:6;transform:translateY(102%);transition:transform var(--t-sheet) var(--ease),border-radius var(--t-sheet) var(--ease);display:block}
+.sheet.on{transform:none;border-radius:min(28px,var(--st)) min(28px,var(--st)) 0 0}
+.sheet.segue{transition:none;border-radius:28px 28px 0 0}
 .s-head{touch-action:none}
-.s-head.line{background:var(--sheet);border-bottom:1px solid var(--sep)}
+.s-head.line{background:linear-gradient(var(--top),var(--sheet));border-bottom:1px solid var(--sep)}
 .body{top:68px;bottom:0;padding-bottom:calc(var(--b) + 90px + var(--kb))}
 .body.errore{padding-bottom:calc(var(--b) + 150px + var(--kb))}
 .q{margin:8px 0 0}
@@ -191,8 +193,13 @@ input.field{outline:0;font-family:inherit;appearance:none;-webkit-appearance:non
 /* --- Categorie chiuse in Voce ------------------------------------------------------------- */
 .chip.on.fissa{padding-left:14px}
 
-/* --- Area di ora, batteria e Dynamic Island -------------------------------------------------
-   La grafica arriva fino al bordo dello schermo. iOS scrive ora e batteria sempre in bianco:
-   nel tema chiaro serve un fondo più scuro solo lì, che sfuma verso il basso. */
-.velo-stato{position:absolute;top:0;left:0;right:0;height:calc(var(--st) * 1.6);z-index:50;pointer-events:none}
-.t-chiaro .velo-stato{background:linear-gradient(180deg,rgba(84,80,168,.92) 0,rgba(84,80,168,.88) 40%,rgba(84,80,168,.62) 50%,rgba(84,80,168,.34) 62%,rgba(84,80,168,.14) 78%,rgba(84,80,168,0) 100%)}
+
+/* --- Fascia dell'orario ------------------------------------------------------------------------
+   Su questa versione di iOS è una fascia piena, dello stesso colore del fondo pagina (--top).
+   Le schermate partono da quel colore e i cerchi sfumano in alto: così non si vede alcun taglio. */
+.t-scuro{--wash-head:linear-gradient(180deg,#12111B 0,#191725 64px)}
+.scr .orb{-webkit-mask-image:linear-gradient(180deg,transparent 352px,#000 396px);mask-image:linear-gradient(180deg,transparent 352px,#000 396px)}
+.scr .orb2{-webkit-mask-image:linear-gradient(180deg,transparent 128px,#000 172px);mask-image:linear-gradient(180deg,transparent 128px,#000 172px)}
+.scr .orb.sm{-webkit-mask-image:linear-gradient(180deg,transparent 300px,#000 344px);mask-image:linear-gradient(180deg,transparent 300px,#000 344px)}
+.scr .orb2.sm{-webkit-mask-image:linear-gradient(180deg,transparent 104px,#000 148px);mask-image:linear-gradient(180deg,transparent 104px,#000 148px)}
+.scr .orb.sh{-webkit-mask-image:linear-gradient(180deg,transparent 330px,#000 374px);mask-image:linear-gradient(180deg,transparent 330px,#000 374px)}
