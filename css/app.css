@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Diario: dalla grafica all'app vera.
+   diario.css resta la fonte di colori e componenti. Qui ci sono aree sicure,
+   tastiera, scorrimento, strati e movimenti (durate e curve delle specifiche).
+   ========================================================================== */
+
+@font-face{font-family:'Instrument Serif';src:url(../font/instrument-serif-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Atkinson Hyperlegible Next';src:url(../font/atkinson-hyperlegible-next.woff2) format('woff2');font-weight:200 800;font-display:swap}
+
+:root{
+  --ease:cubic-bezier(.32,.72,0,1);
+  --t-sheet:380ms;--t-page:300ms;--t-tab:180ms;--t-cap:240ms;--t-toast:220ms;--t-field:240ms;--t-press:90ms;--t-dlg:260ms;--t-fade:180ms;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --t:max(var(--st),12px);--b:max(var(--sb),12px);
+  --kb:0px;
+}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:#F3F0FB;-webkit-text-size-adjust:100%}
+@media (prefers-color-scheme:dark){html,body{background:#12111B}}
+
+/* --- Telaio ---------------------------------------------------------------- */
+.scr{position:fixed;inset:0;width:auto;height:auto;background:var(--top);-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;overflow:hidden}
+@media (min-width:500px){.scr{left:50%;right:auto;width:430px;transform:translateX(-50%)}}
+.scr.t-chiaro{color-scheme:light}
+.scr.t-scuro{color-scheme:dark}
+.scr textarea,.scr input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+.sotto{position:absolute;inset:0;overflow:hidden;background:var(--wash),var(--bg);transform-origin:50% 45%;transition:transform var(--t-sheet) var(--ease),border-radius var(--t-sheet) var(--ease)}
+.sotto.ridotto{transform:scale(.955);border-radius:18px}
+.sotto.spinto{transform:translateX(-24%);transition:transform var(--t-page) var(--ease)}
+[data-scorre]{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+[data-scorre]::-webkit-scrollbar{display:none}
+
+/* --- Tocco ------------------------------------------------------------------ */
+.scr button{transition:transform var(--t-press) ease-out,background-color 120ms ease,color 120ms ease,border-color 120ms ease,opacity 120ms ease;touch-action:manipulation}
+.scr button:active{transform:scale(.97)}
+.scr .btn:disabled:active,.scr .tabs button:active{transform:none}
+.chip svg.i{animation:spunta 160ms var(--ease) both}
+@keyframes spunta{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+[hidden]{display:none!important}
+
+/* --- Viste principali -------------------------------------------------------- */
+.vista{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:var(--t);opacity:0;visibility:hidden;transform:translateY(6px);pointer-events:none;transition:opacity var(--t-tab) ease,transform var(--t-tab) ease,visibility 0s linear var(--t-tab)}
+.vista.on{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity var(--t-tab) ease,transform var(--t-tab) ease,visibility 0s}
+.vista>*{flex:none}
+.vista>.orb,.vista>.orb2{position:absolute}
+.head{position:relative;top:auto;left:auto;right:auto;padding:0 8px 0 16px;z-index:1}
+.lists{position:relative;top:auto;left:auto;right:auto;flex:1 1 0;min-height:0;padding:26px 16px calc(var(--b) + 160px);z-index:1}
+.vista .empty{top:42%;transform:translateY(-50%)}
+
+/* --- Barra in basso, con la capsula che scorre --------------------------------- */
+.tabs{bottom:var(--b)}
+.tabs button.on{background:transparent;transition:color var(--t-cap) ease}
+.tabs button{z-index:1}
+.cap{position:absolute;top:5px;left:5px;width:calc((100% - 18px)/3);height:calc(100% - 10px);border-radius:26px;background:var(--accent);transition:transform var(--t-cap) var(--ease)}
+.cap.at1{transform:translateX(calc(100% + 4px))}
+.cap.at2{transform:translateX(calc(200% + 8px))}
+.cta{bottom:calc(var(--b) + 74px);transition:transform var(--t-press) ease-out,opacity var(--t-fade) ease}
+.dock{height:calc(var(--b) + 94px)}
+.dock.hi{height:calc(var(--b) + 162px)}
+.riga-nuova{animation:riga 320ms var(--ease) both}
+@keyframes riga{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* --- Messaggi ---------------------------------------------------------------- */
+.toast{position:absolute;bottom:calc(var(--b) + 146px);z-index:30;transform:translateY(16px);opacity:0;pointer-events:none;transition:transform var(--t-toast) var(--ease),opacity var(--t-toast) ease}
+.toast.low{bottom:calc(var(--b) + 14px)}
+.toast.on{transform:none;opacity:1;pointer-events:auto}
+
+/* --- Pagine che entrano da destra ---------------------------------------------- */
+.pagina{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;padding-top:var(--t);background:var(--wash-head),var(--sheet);transform:translateX(100%);transition:transform var(--t-page) var(--ease);box-shadow:-10px 0 30px rgba(0,0,0,.08);overflow:hidden}
+.pagina.on{transform:none}
+.pagina.spinta{transform:translateX(-24%)}
+.pagina.segue{transition:none}
+.pagina>*{flex:none}
+.pagina>.orb,.pagina>.orb2{position:absolute}
+.v-head{position:relative;top:auto;left:auto;right:auto;margin:0 12px 0 8px;width:auto}
+.v-date{position:relative}
+.v-date .sovra{font-size:16px}
+.v-body{position:relative;top:auto;bottom:auto;left:auto;right:auto;flex:1 1 0;min-height:0;padding:0 16px calc(var(--b) + 96px + var(--kb));z-index:1}
+.saved{opacity:0;transition:opacity 200ms ease}
+.saved.on{opacity:1;transition:opacity 160ms ease}
+.subhead{position:relative;top:auto;left:auto;right:auto;padding-left:8px;z-index:1}
+.subtitle{position:relative;top:auto;left:auto;right:auto;padding:0 16px;z-index:1}
+.set{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:1 1 0;min-height:0;padding:12px 16px calc(var(--b) + 24px);margin:0;z-index:1}
+.set.con-pulsante{padding-bottom:calc(var(--b) + 84px)}
+.addbtn{bottom:var(--b);z-index:3}
+.lrow{cursor:pointer}
+.scr .lrow:active,.scr .erow button:active,.scr .arow:active,.scr .row:active{transform:none;background:var(--sep)}
+.scr .row,.scr .arow,.scr .lrow{transition:background-color 120ms ease}
+
+/* --- Piè di pagina con Salva e Fine: resta sopra la tastiera --------------------- */
+.foot{height:calc(var(--b) + 66px);bottom:0;transform:translateY(calc(-1 * var(--kb)));transition:transform 250ms var(--ease);z-index:3}
+.foot.tall{height:calc(var(--b) + 124px)}
+.kbopen .foot{height:72px;padding-top:8px}
+.kbopen .foot.tall{height:130px}
+
+/* --- Pannello Nuova voce --------------------------------------------------------- */
+.velo{position:absolute;inset:0;z-index:5;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity var(--t-sheet) ease}
+.velo.on{opacity:1;pointer-events:auto}
+.sheet{top:max(var(--st),10px);z-index:6;transform:translateY(102%);transition:transform var(--t-sheet) var(--ease);display:block}
+.sheet.on{transform:none}
+.sheet.segue{transition:none}
+.s-head{touch-action:none}
+.s-head.line{background:var(--sheet);border-bottom:1px solid var(--sep)}
+.body{top:68px;bottom:0;padding-bottom:calc(var(--b) + 90px + var(--kb))}
+.body.errore{padding-bottom:calc(var(--b) + 150px + var(--kb))}
+.q{margin:8px 0 0}
+textarea.field{resize:none;outline:0;overflow:hidden;font-family:inherit;appearance:none;-webkit-appearance:none}
+textarea.field:focus,input.field:focus{border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
+.field::placeholder{color:var(--ph);opacity:1}
+input.field{outline:0;font-family:inherit;appearance:none;-webkit-appearance:none}
+.help{overflow:hidden;max-height:90px;transition:max-height var(--t-field) var(--ease),opacity 120ms ease,margin var(--t-field) var(--ease)}
+.kbopen .sheet .help.su-pensiero{max-height:0;opacity:0;margin-top:0}
+.apribile{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--t-field) var(--ease),opacity 160ms ease;opacity:0}
+.apribile>div{overflow:hidden;min-height:0}
+.apribile.open{grid-template-rows:1fr;opacity:1}
+.chiudibile{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-field) var(--ease),opacity 120ms ease}
+.chiudibile>div{overflow:hidden;min-height:0}
+.chiudibile.gone{grid-template-rows:0fr;opacity:0;pointer-events:none}
+.frow{margin-top:10px}
+.frow:active{transform:scale(.985)}
+
+/* --- Cursore -------------------------------------------------------------------- */
+.trk{touch-action:pan-y;cursor:pointer;outline:0}
+.t-fill{transition:width 120ms ease-out}
+.t-th{transition:left 120ms ease-out}
+.trk.drag .t-fill,.trk.drag .t-th{transition:none}
+.sl{animation:compare 220ms var(--ease) both}
+@keyframes compare{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+
+/* --- Conferme e pannelli ----------------------------------------------------------- */
+.velo2{position:absolute;inset:0;z-index:20;background:var(--scrim);opacity:0;transition:opacity var(--t-fade) ease}
+.velo2.on{opacity:1}
+.strato{z-index:21;opacity:0;pointer-events:none}
+.dlg{bottom:calc(max(var(--kb),var(--b)) + 8px);transform:translateY(40px);transition:transform var(--t-dlg) var(--ease),opacity 160ms ease,bottom 250ms var(--ease)}
+.dlg.on{transform:none;opacity:1;pointer-events:auto}
+.panel{padding-bottom:calc(var(--b) + 8px);transform:translateY(100%);opacity:1;transition:transform var(--t-sheet) var(--ease);max-height:88%;overflow-y:auto}
+.panel.on{transform:none;pointer-events:auto}
+.dlg label{display:block;margin:6px 2px 0}
+.dlg .field{margin:6px 0 8px;display:block;width:100%;font-size:18px;line-height:25px;font-weight:400;color:var(--ink);min-height:52px}
+.dfield{position:relative}
+.sovra{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;border:0;font-size:16px;cursor:pointer}
+
+/* --- Archivio --------------------------------------------------------------------- */
+.filters{position:relative;top:auto;left:auto;right:auto;margin:10px 16px 12px;z-index:1}
+.a-list{position:relative;top:auto;left:auto;right:auto;bottom:auto;flex:1 1 0;min-height:0;padding:0 16px calc(var(--b) + 96px);display:block;z-index:1}
+.a-list>.card{margin-bottom:2px}
+.lista-sfuma{animation:sfuma var(--t-fade) ease both}
+@keyframes sfuma{from{opacity:0}to{opacity:1}}
+.vista .msg{top:44%;transform:translateY(-50%)}
+.arow{min-height:44px}
+.a-txt.intero{display:block;-webkit-line-clamp:unset;overflow:visible;white-space:pre-wrap}
+.arow{transition:background-color 120ms ease}
+
+/* --- Seduta ------------------------------------------------------------------------- */
+.mini{top:0;height:calc(var(--t) + 44px);padding-top:var(--t);opacity:0;pointer-events:none;transition:opacity var(--t-fade) ease}
+.mini.on{opacity:1}
+.sed-scorre{position:relative;flex:1 1 0;min-height:0;padding:0 0 calc(var(--b) + 190px);z-index:1}
+.sed-scorre .head{padding-left:16px}
+.period{position:relative;top:auto;left:auto;right:auto;margin:0 16px 2px}
+.sd{position:relative;top:auto;left:auto;right:auto;margin:0 16px}
+.titolo-voci{margin:18px 18px 8px;font-size:28px;line-height:32px;font-weight:400}
+.sed-voci{margin:0 16px}
+.s-acts{bottom:calc(var(--b) + 74px)}
+.btn:disabled{cursor:default}
+
+/* --- Primo avvio ---------------------------------------------------------------------- */
+.avvio{position:absolute;inset:0;z-index:40;background:var(--wash),var(--bg);overflow:hidden;transition:opacity 260ms ease}
+.avvio.via{opacity:0;pointer-events:none}
+.avvio .steps{bottom:calc(var(--b) + 40px)}
+.avvio .acts{bottom:var(--b)}
+.avvio .hero{top:calc(var(--t) + 100px);z-index:1}
+.avvio .avviso{margin:14px 0 0;font-size:17px;line-height:24px;color:var(--ink)}
+
+/* --- Riduci movimento: solo dissolvenze brevi ------------------------------------------ */
+@media (prefers-reduced-motion:reduce){
+  :root{--t-sheet:120ms;--t-page:120ms;--t-tab:120ms;--t-cap:0ms;--t-toast:120ms;--t-field:0ms;--t-press:0ms;--t-dlg:120ms;--t-fade:120ms}
+  .scr button:active{transform:none;opacity:.7}
+  .sotto.ridotto,.sotto.spinto,.pagina.spinta{transform:none;border-radius:0}
+  .vista,.vista.on{transform:none}
+  .sheet,.sheet.on{transform:none;opacity:0;pointer-events:none;transition:opacity 120ms linear}
+  .sheet.on{opacity:1;pointer-events:auto}
+  .pagina,.pagina.on{transform:none;opacity:0;pointer-events:none;box-shadow:none;transition:opacity 120ms linear}
+  .pagina.on{opacity:1;pointer-events:auto}
+  .sl,.riga-nuova,.chip svg.i{animation:none}
+  .t-fill,.t-th{transition:none}
+  .toast,.toast.on,.dlg,.dlg.on{transform:none}
+  .panel,.panel.on{transform:none;opacity:0;transition:opacity 120ms linear}
+  .panel.on{opacity:1}
+  .foot{transition:none}
+}
+
+/* --- Categorie chiuse in Voce ------------------------------------------------------------- */
+.chip.on.fissa{padding-left:14px}

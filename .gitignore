@@ -1,0 +1,5 @@
+node_modules/
+*.log
+.DS_Store
+diario-elenchi*.json
+diario-backup*.json
